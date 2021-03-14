@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加订单</title>
+
+</head>
+<body background="test02.jpg">
+<div id="main" style="width: 1200px">
+    <div id="left" style="width: 450px;height: 1200px;float: left">
+        <form style="margin-top: 20px;margin-left: 50px;" action="/order/" method="post">
+            <table border="1" class="mytable">
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">租借用户手机号</td>
+                <td><input type="text" name="rent_mobile" style="background: antiquewhite;height: 35px;font-size: 16px"></input></td>
+                </tr>
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">租借设备</td>
+                <td><input type="text" name="box_device_sn" style="background: antiquewhite;height: 35px;font-size: 16px"></input></td>
+                </tr>
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">租借【开始】时间</td>
+                <td align="left" style="height: 35px">
+                    <input  type="text" name="start_time" style="background: antiquewhite;height: 35px;width:150px;font-size: 16px">
+                    <input value="..." style="width: 35px;height: 35px" type="button" onclick="get_start_time()">
+                    </input>
+                </td>
+                </tr>
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">租借时长</td>
+                <td><input type="text" name="rent_time" style="background: antiquewhite;height: 35px;font-size: 16px"></input></td>
+                </tr>
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">租借【结束】时间</td>
+                <td align="left" style="height: 35px">
+                    <input type="text" name="end_time" style="background: antiquewhite;height: 35px;width:150px;font-size: 16px"></input>
+                    <input value="***" style="width: 35px;height: 35px" type="button" onclick="get_end_time()">
+                </td>
+                </tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">数据库选择</td>
+                <td>
+                <select name="db_change" style="font-size: 16px;width: 200px;height: 35px;background: antiquewhite">
+                  <option value="test">dev数据库</option>
+                  <option value="master">master数据库</option>
+                  <option value="dev">dev_tyf数据库</option>
+                </select>
+                </td>
+                </tr>
+                <br>
+                <td>
+                    <input style="background: antiquewhite;width: 150px;height: 50px;font-size: 20px" value="确定" type="submit">
+                </td>
+                <td>
+                    <input style="background: antiquewhite;width: 200px;height: 50px;font-size: 16px" type="reset" value="重置">
+                </td>
+            </table>
+        </form>
+    </div>
+    <div id="right" style="width: 750px;float: left"></div>
+        <br>
+        <br>
+        <table border="1" id="mytb" style="height: 30px;width: 700px;">订单详情：
+            <thead>
+            <tr>
+                <th style="background: antiquewhite;height: 35px;font-size: 16px">设备编号</th>
+                <th style="background: cornflowerblue">订单编号</th>
+                <th style="background: brown">数据库类型</th>
+                <th style="background: cadetblue">订单分润时间</th>
+                <th style="background: burlywood">支付金额</th>
+                <th style="background: coral">服务商id</th>
+                <th style="background: antiquewhite">-报-错-信-息-</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for f in detail %}
+            <tr>
+                <td style="background: antiquewhite;height: 35px;font-size: 16px">{{f.device_sn}}</td>
+                <td style="background: cornflowerblue">{{ f.order_id }}</td>
+                <td style="background: brown">{{ f.db }}</td>
+                <td style="background: cadetblue">{{ f.deal_time }}</td>
+                <td style="background: burlywood">{{ f.total_amount }}</td>
+                <td style="background: coral">{{ f.agent_id }}</td>
+                <td style="background: antiquewhite">{{ f.error }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <table border="1" id="mytb_" style="height: 30px;width: 700px;">订单分润结果：
+            <thead>
+            <tr>
+                <th style="background: antiquewhite;height: 35px;font-size: 16px">分成对象</th>
+                <th style="background: cornflowerblue">原始比例</th>
+                <th style="background: brown">分润比例</th>
+                <th style="background: cadetblue">分润金额</th>
+                <th style="background: coral">分润类型</th>
+                <th style="background: darkgray">分润类型注释</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for foo in msg %}
+            <tr>
+                <td style="background: antiquewhite;height: 35px;font-size: 16px">{{ foo.assign_target_id }}</td>
+                <td style="background: cornflowerblue">{{ foo.origin_ratio }}</td>
+                <td style="background: brown">{{ foo.assign_ratio }}</td>
+                <td style="background: cadetblue">{{ foo.assign_amount }}</td>
+                <td class="a_type" style="background: coral" >{{ foo.assign_type }}</td>
+                <td class="assign" style="background: darkgray"></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br>
+        <table border="1" id="my_tb" style="height: 30px;width: 700px;">联创分成结果：
+            <thead>
+            <tr>
+                <th style="background: antiquewhite;height: 35px;font-size: 16px">分成对象</th>
+                <th style="background: cornflowerblue">分成来源</th>
+                <th style="background: brown">分成比例</th>
+                <th style="background: cadetblue">分成金额</th>
+                <th style="background: coral">分成类型</th>
+                <th style="background: darkgray">分成类型注释</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for fo in lianc %}
+            <tr>
+                <td style="background: antiquewhite;height: 35px;font-size: 16px">{{ fo.assign_target_id }}</td>
+                <td style="background: cornflowerblue">{{ fo.assign_source_id }}</td>
+                <td style="background: brown">{{ fo.assign_ratio }}</td>
+                <td style="background: cadetblue">{{ fo.assign_amount }}</td>
+                <td style="background: coral">{{ fo.assign_type }}</td>
+                <td style="background: darkgray"></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+<script type="text/javascript" >
+    var t        = new Date();       //获取当前时间
+    var year     = t.getFullYear(); //获取当前时间年份
+    var month    = t.getMonth()+1;  //获取当前时间月份
+    var day      = t.getDate();      //获取当前时间的日
+    var hour     = t.getHours();
+    var minute   = t.getMinutes();
+    var second   = t.getSeconds();
+    var show_start_time = year + "-" + month + "-" + day+" "+"00"+":"+"00"+":"+"00";
+    var show_end_time   = year + "-" + month + "-" + day+" "+hour+":"+minute+":"+second;
+    console.log(show_end_time)
+    function get_start_time() {
+        document.getElementsByName("start_time")[0].value = show_start_time;
+    }
+    function get_end_time() {
+        document.getElementsByName("end_time")[0].value = show_end_time;
+    }
+    console.log('到此结束');
+    function get_agent() {
+        console.log('开始函数的运作')
+        for (i = 1; i < 15; i++) {
+            var assign_type = document.getElementById('mytb_').rows[i].cells[4].innerHTML;
+            console.log('获得表格值：', assign_type)
+            if (assign_type == 1) {
+                assign_type_txt = '店铺正常分成'
+            } else if (assign_type == 2) {
+                assign_type_txt = '店铺锁客分成'
+            } else if (assign_type == 5) {
+                assign_type_txt = '合伙创业人分成'
+            } else if (assign_type == 6) {
+                assign_type_txt = '合伙创业人级差'
+            } else if (assign_type == 8) {
+                assign_type_txt = '合伙人分成'
+            } else if (assign_type == 11) {
+                assign_type_txt = '店铺管理员固定分成'
+            } else if (assign_type == 12) {
+                assign_type_txt = '店铺管理者锁客分成'
+            } else if (assign_type == 14) {
+                assign_type_txt = '经销商拓展收益分成'
+            } else if (assign_type == 15) {
+                assign_type_txt = '服务商设备激活返现'
+            } else if (assign_type == 16) {
+                assign_type_txt = '服务商联合运营分润'
+            } else if (assign_type == 17) {
+                assign_type_txt = '开拓合作方分润'
+            } else if (assign_type == 18) {
+                assign_type_txt = '服务商订单补贴'
+            } else if (assign_type == 19) {
+                assign_type_txt = '省代分润'
+            } else if (assign_type == 20) {
+                assign_type_txt = '市代分润'
+            } else if (assign_type == 21) {
+                assign_type_txt = '区代分润'
+            } else if (assign_type == 31) {
+                assign_type_txt = '押金返还'
+            } else if (assign_type == 32) {
+                assign_type_txt = '合伙创业人流水返还'
+            } else if (assign_type == 41) {
+                assign_type_txt = '开拓合作方级差'
+            } else if (assign_type == 42) {
+                assign_type_txt = '开拓方流水返现'
+            } else if (assign_type == 51) {
+                assign_type_txt = '店铺分润税费'
+            } else if (assign_type == 52) {
+                assign_type_txt = '店铺锁客代扣税费'
+            } else if (assign_type == 61) {
+                assign_type_txt = '店铺管理员正常分成税费'
+            } else if (assign_type == 62) {
+                assign_type_txt = '店铺管理员锁客分成税费'
+            } else if (assign_type == 70) {
+                assign_type_txt = '经销商分成'
+            } else if (assign_type == 80) {
+                assign_type_txt = '联创服务商分润'
+            } else if (assign_type == 81) {
+                assign_type_txt = '联创合伙人分润'
+            } else if (assign_type == 99) {
+                assign_type_txt = '其他账户转入'
+            } else {
+                assign_type_txt = '暂无此类型分成'
+            };
+            console.log('函数内循环值：', assign_type_txt);
+            document.getElementById('mytb_').rows[i].cells[5].innerHTML = assign_type_txt;
+        };
+    };
+    function get_lianc() {
+        for (j = 1; j < 6; j++){
+            var assign_t = document.getElementById('my_tb').rows[j].cells[4].innerHTML;
+            console.log('获得表格值：', assign_t)
+            if (assign_t == 10) {
+                assign_t_txt = '直推设备订单分成'
+            } else if (assign_t == 20) {
+                assign_t_txt = '团队设备订单分成'
+            } else{
+                assign_t_txt = '其他联创类型分成'
+            }
+            console.log('函数内循环值：', assign_type_txt);
+            document.getElementById('my_tb').rows[j].cells[5].innerHTML = assign_t_txt;
+        };
+    };
+    try {
+        console.log('开始分润计算')
+        get_agent();
+    }
+    catch (e) {
+        console.log('33333')
+    }finally {
+        console.log('开始分成计算')
+        get_lianc();
+    };
+    {#debugger;#}
+    console.log('最后结尾****');
+</script>
+</body>
+</html>
+<!--这是注释的>

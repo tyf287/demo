@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FM新增设备</title>
+    <style>
+        body{background: darkgray}
+        table{width:200px;}
+        table tr{height:30px;text-align:center;}
+        table tr input,table tr select{height:30px;}
+    </style>
+</head>
+<body>
+<div id="main" style="width: 1200px">
+    <div id="left" style="width: 450px;float: left">
+        <form style="margin-top: 20px;margin-left: 50px;" action="/device/" method="post">
+            <table class="tb" border="1" class="mytable">
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">设备前置编号</td>
+                <td><input type="text" name="device_first_name" style="background: antiquewhite;height: 35px;font-size: 16px"></input></td>
+                </tr>
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">新增设备数量</td>
+                <td><input type="text" name="add_acount" style="background: antiquewhite;height: 35px;font-size: 16px"></input></td>
+                </tr>
+                <tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">设备类型</td>
+                <td>
+                <select name="device_type" style="font-size: 16px;width: 200px;height: 35px;background: antiquewhite">
+                  <option value="1">充电宝</option>
+                  <option value="3">自动售货柜</option>
+                  <option value="2">充电线</option>
+                </select>
+                </td>
+                </tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">服务商手机</td>
+                <td><input type="text" name="mobile" style="background: antiquewhite;height: 35px;font-size: 16px"></input></td>
+                </tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">服务商类型</td>
+                <td>
+                <select name="agent_type" style="font-size: 16px;width: 200px;height: 35px;background: antiquewhite">
+                  <option value="1">合伙创业</option>
+                  <option value="3">智电联创</option>
+                  <option value="2">开拓合作</option>
+                </select>
+                </td>
+                </tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">FM设备类型</td>
+                <td>
+                <select name="device_sn_id" style="font-size: 16px;width: 200px;height: 35px;background: antiquewhite">
+                  <option value="27">纷米E7</option>
+                  <option value="37">自动售货柜</option>
+                  <option value="28">纷米E3</option>
+                  <option value="13">充电线</option>
+                </select>
+                </td>
+                </tr>
+                <td align="center" style="background: antiquewhite;height: 35px;font-size: 16px">数据库选择</td>
+                <td>
+                <select name="db_change" style="font-size: 16px;width: 200px;height: 35px;background: antiquewhite">
+                  <option value="test">dev数据库</option>
+                  <option value="master">master数据库</option>
+                  <option value="dev">dev_tyf数据库</option>
+                </select>
+                </td>
+                </tr>
+                <br>
+                <td>
+                    <input style="background: antiquewhite;width: 150px;height: 50px;font-size: 20px" type="submit" value="确定">
+                </td>
+                <td>
+                    <input style="background: antiquewhite;width: 200px;height: 50px;font-size: 16px" type="reset" value="重置">
+                </td>
+            </table>
+        </form>
+    </div>
+    <div id="right" style="width: 750px;float: left"></div>
+        <br>
+        <br>
+        <table border="1" id="mytb" style="height: 30px;width: 700px;">新增设备详情：
+            <thead>
+            <tr>
+                <th style="background: antiquewhite;height: 35px;font-size: 16px">设备编号</th>
+                <th style="background: blueviolet">设备类型</th>
+                <th style="background: brown">数据库类型</th>
+                <th style="background: cadetblue">创建时间</th>
+                <th style="background: coral">服务商id</th>
+                <th style="background: antiquewhite">报错信息</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for f in txt %}
+            <tr>
+                <td style="background: antiquewhite;height: 35px;font-size: 16px">{{f.device_sn}}</td>
+                <td style="background: blueviolet">{{ f.device_type }}</td>
+                <td style="background: brown">{{ f.db }}</td>
+                <td style="background: cadetblue">{{ f.create_time }}</td>
+                <td style="background: coral">{{ f.s_uid }}</td>
+                <td style="background: antiquewhite">{{ f.error }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+{#<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>#}
+{#<script>#}
+{#    function demo(){#}
+{#        console.log("开始使用ajax")#}
+{#        $.ajax({#}
+{#            url:"/login/",#}
+{#            type:'post',#}
+{#            success:function(result){#}
+{#			    alert(result)#}
+{#		    }},#}
+{#        console.log("结束ajax")#}
+{#		);#}
+{#        console.log("调用函数")#}
+{#        alert('调用函数')#}
+{#        return false;#}
+{#    }#}
+{#</script>#}
+</body>
+</html>
